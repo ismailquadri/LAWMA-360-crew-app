@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SupervisorDashboard } from "@/components/SupervisorDashboard";
-import { IPhone17Mockup } from "@/components/IPhone17Mockup";
 import {
   BatteryFull,
   Building2,
@@ -32,10 +31,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "LAWMA 360 — Resident & Crew Field App Presentation" },
-      { name: "description", content: "Interactive stakeholder presentation featuring the Resident Mobile App on iPhone 17 and Crew Field Terminal." },
-      { property: "og:title", content: "LAWMA 360 — Resident & Crew Field App Presentation" },
-      { property: "og:description", content: "Interactive stakeholder presentation featuring the Resident Mobile App on iPhone 17 and Crew Field Terminal." },
+      { title: "Crew Field App — Rugged Terminal Prototype" },
+      { name: "description", content: "Interactive offline-first waste collection field terminal prototype." },
+      { property: "og:title", content: "Crew Field App — Rugged Terminal Prototype" },
+      { property: "og:description", content: "Interactive offline-first waste collection field terminal prototype." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -95,7 +94,7 @@ function CrewFieldPrototype() {
   const [network, setNetwork] = useState<Network>("Depot Wi-Fi");
   const [manifest, setManifest] = useState(0);
   const [diagnosticStep, setDiagnosticStep] = useState(0);
-  const [mode, setMode] = useState<"resident" | "operator" | "supervisor">("resident");
+  const [mode, setMode] = useState<"operator" | "supervisor">("operator");
   const [flash, setFlash] = useState<Flash>(null);
   const [scenarioIndex, setScenarioIndex] = useState(0);
   const [completed, setCompleted] = useState(47);
@@ -242,60 +241,25 @@ function CrewFieldPrototype() {
   return (
     <main className="prototype-stage">
       <section className="presentation-copy" aria-label="Prototype overview">
-        {mode === "resident" ? (
-          <>
-            <div className="brand-mark resident-mark"><span>360</span></div>
-            <p className="eyebrow">RESIDENT MOBILE APP / IPHONE 17 PRO MOCKUP</p>
-            <h1>Clean homes.<br />Verified at your door.</h1>
-            <p className="intro">
-              The citizen-facing application for Lagos households and businesses: request on-demand collections, register smart RFID bins, track collection crews in real-time, and manage automated cashless payments.
-            </p>
-          </>
-        ) : mode === "supervisor" ? (
-          <>
-            <div className="brand-mark"><span>OPS</span></div>
-            <p className="eyebrow">DISTRICT FLEET COMMAND / SUPERVISOR DASHBOARD</p>
-            <h1>Real-time oversight.<br />Across every zone.</h1>
-            <p className="intro">
-              Monitor active crews, battery levels, offline sync queues, and review real-time arrears override requests from the field.
-            </p>
-          </>
-        ) : (
-          <>
-            <div className="brand-mark"><span>CF</span></div>
-            <p className="eyebrow">CREW FIELD APP / RUGGED HANDHELD PROTOTYPE</p>
-            <h1>Built for the street.<br />Not the office.</h1>
-            <p className="intro">A zero-touch field workflow designed for loud routes, harsh weather, gloved hands, and unreliable networks.</p>
-          </>
-        )}
+        <div className="brand-mark"><span>CF</span></div>
+        <p className="eyebrow">CREW FIELD APP / INTERACTIVE PROTOTYPE</p>
+        <h1>Built for the street.<br />Not the office.</h1>
+        <p className="intro">A zero-touch field workflow designed for loud routes, harsh weather, gloved hands, and unreliable networks.</p>
 
         <div className="control-panel">
-          <p className="control-label">SELECT STAKEHOLDER VIEW</p>
-          <div className="mode-switch" aria-label="App mode">
-            <button className={mode === "resident" ? "selected" : ""} onClick={() => setMode("resident")}>
-              <Smartphone /> Resident (iPhone 17)
-            </button>
-            <button className={mode === "operator" ? "selected" : ""} onClick={() => setMode("operator")}>
-              <ScanLine /> Crew Scanner (Rugged)
-            </button>
-            <button className={mode === "supervisor" ? "selected" : ""} onClick={() => setMode("supervisor")}>
-              <Users /> Supervisor Dashboard
-            </button>
+          <p className="control-label">SIMULATE NETWORK</p>
+          <div className="network-grid">
+            {(["Depot Wi-Fi", "4G", "2G / Edge", "Offline"] as Network[]).map((item) => (
+              <button key={item} className={network === item ? "control-button active" : "control-button"} onClick={() => setNetwork(item)}>
+                {item === "Depot Wi-Fi" ? <Wifi /> : item === "4G" ? <Signal /> : item === "2G / Edge" ? <SignalLow /> : <WifiOff />}
+                <span>{item}</span>
+              </button>
+            ))}
           </div>
-
-          {mode !== "resident" && (
-            <>
-              <p className="control-label" style={{ marginTop: "20px" }}>SIMULATE NETWORK</p>
-              <div className="network-grid">
-                {(["Depot Wi-Fi", "4G", "2G / Edge", "Offline"] as Network[]).map((item) => (
-                  <button key={item} className={network === item ? "control-button active" : "control-button"} onClick={() => setNetwork(item)}>
-                    {item === "Depot Wi-Fi" ? <Wifi /> : item === "4G" ? <Signal /> : item === "2G / Edge" ? <SignalLow /> : <WifiOff />}
-                    <span>{item}</span>
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
+          <div className="mode-switch" aria-label="App mode">
+            <button className={mode === "operator" ? "selected" : ""} onClick={() => setMode("operator")}><Smartphone /> Operator</button>
+            <button className={mode === "supervisor" ? "selected" : ""} onClick={() => setMode("supervisor")}><Users /> Supervisor</button>
+          </div>
         </div>
 
         <div className="control-panel scenario-explorer">
@@ -325,64 +289,48 @@ function CrewFieldPrototype() {
         </div>
 
         <div className="prototype-notes">
-          {mode === "resident" ? (
-            <>
-              <div><Smartphone /><span><strong>iPhone 17 Form Factor</strong>Ultra-slim titanium frame with interactive Dynamic Island</span></div>
-              <div><Zap /><span><strong>Live & Offline Ready</strong>Embedded production web app with deterministic fallback</span></div>
-            </>
-          ) : (
-            <>
-              <div><ScanLine /><span><strong>Physical trigger</strong>Click device trigger or press Spacebar</span></div>
-              <div><Zap /><span><strong>Instant local write</strong>No loading states in the scanning loop</span></div>
-            </>
-          )}
+          <div><ScanLine /><span><strong>Physical trigger</strong>Click device trigger or press Spacebar</span></div>
+          <div><Zap /><span><strong>Instant local write</strong>No loading states in the scanning loop</span></div>
         </div>
       </section>
 
-      {mode === "resident" ? (
-        <section className="device-zone device-zone-iphone" aria-label="iPhone 17 Resident App Simulator">
-          <div className="device-shadow" style={{ width: "360px", height: "40px", bottom: "10px" }} />
-          <IPhone17Mockup initialRoute="/" />
-        </section>
-      ) : (
-        <section className="device-zone" aria-label="Rugged handheld simulator">
-          <div className="device-shadow" />
-          <div className="scanner-head">
-            <div className="scanner-window"><span /></div>
-            <div className="indicator-strip"><i className="ready" /><i /><i /></div>
+      <section className="device-zone" aria-label="Rugged handheld simulator">
+        <div className="device-shadow" />
+        <div className="scanner-head">
+          <div className="scanner-window"><span /></div>
+          <div className="indicator-strip"><i className="ready" /><i /><i /></div>
+        </div>
+        <div className="device-body">
+          <div className="speaker"><i /><i /><i /><i /><i /></div>
+          <button className="side-key left-key" onClick={scan} aria-label="Side scan key" />
+          <div className={`device-screen ${flash ? `flash-${flash}` : ""}`}>
+            <header className="status-bar">
+              <span className="status-network"><NetworkIcon /> {network}</span>
+              <span>GPS <Crosshair /></span>
+              <span><BatteryFull /> 84%</span>
+              <time>{clock}</time>
+            </header>
+            {isOffline && screen !== "login" && mode === "operator" && (
+              <div className="offline-banner"><WifiOff /> <strong>OFFLINE MODE</strong><span>{cached} {cached === 1 ? "record" : "records"} saved locally</span></div>
+            )}
+            {syncing && <div className="sync-banner"><CloudUpload /> <strong>SYNCING…</strong><span>{synced}/{completed} synced</span></div>}
+            <div className="screen-content">{deviceContent}</div>
+            <nav className="device-nav" aria-label="Device navigation">
+              <button aria-label="Back" onClick={() => screen !== "login" && setScreen("route")}><ChevronRight className="back-icon" /></button>
+              <span />
+              <button aria-label="Home" onClick={() => setScreen(screen === "login" ? "login" : "route")}><i /></button>
+            </nav>
           </div>
-          <div className="device-body">
-            <div className="speaker"><i /><i /><i /><i /><i /></div>
-            <button className="side-key left-key" onClick={scan} aria-label="Side scan key" />
-            <div className={`device-screen ${flash ? `flash-${flash}` : ""}`}>
-              <header className="status-bar">
-                <span className="status-network"><NetworkIcon /> {network}</span>
-                <span>GPS <Crosshair /></span>
-                <span><BatteryFull /> 84%</span>
-                <time>{clock}</time>
-              </header>
-              {isOffline && screen !== "login" && mode === "operator" && (
-                <div className="offline-banner"><WifiOff /> <strong>OFFLINE MODE</strong><span>{cached} {cached === 1 ? "record" : "records"} saved locally</span></div>
-              )}
-              {syncing && <div className="sync-banner"><CloudUpload /> <strong>SYNCING…</strong><span>{synced}/{completed} synced</span></div>}
-              <div className="screen-content">{deviceContent}</div>
-              <nav className="device-nav" aria-label="Device navigation">
-                <button aria-label="Back" onClick={() => screen !== "login" && setScreen("route")}><ChevronRight className="back-icon" /></button>
-                <span />
-                <button aria-label="Home" onClick={() => setScreen(screen === "login" ? "login" : "route")}><i /></button>
-              </nav>
-            </div>
-            <div className="device-badge"><ShieldAlert /> IP67</div>
-            <div className="brand-plate">FIELDCORE <span>R6</span></div>
-            <button className="physical-trigger" onClick={scan} aria-label="Pull physical scanner trigger">
-              <span className="trigger-ridges"><i /><i /><i /></span>
-              <strong>SCAN</strong>
-            </button>
-          </div>
-          <div className="pistol-grip"><span /><i /></div>
-          <p className="trigger-hint"><kbd>SPACE</kbd> hardware trigger</p>
-        </section>
-      )}
+          <div className="device-badge"><ShieldAlert /> IP67</div>
+          <div className="brand-plate">FIELDCORE <span>R6</span></div>
+          <button className="physical-trigger" onClick={scan} aria-label="Pull physical scanner trigger">
+            <span className="trigger-ridges"><i /><i /><i /></span>
+            <strong>SCAN</strong>
+          </button>
+        </div>
+        <div className="pistol-grip"><span /><i /></div>
+        <p className="trigger-hint"><kbd>SPACE</kbd> hardware trigger</p>
+      </section>
     </main>
   );
 }
